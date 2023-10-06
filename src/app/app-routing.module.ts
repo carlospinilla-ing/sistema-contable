@@ -1,10 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes,RouterModule  } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { TestListComponent } from './test-list/test-list.component';
+import { AccountComponent } from './components/config/account/account.component';
+import { TransactionTypeComponent } from './components/config/transaction-type/transaction-type.component';
+import { TransactionComponent } from './components/transaction/transaction/transaction.component';
 
 const routes: Routes = [
-  { path: 'tests', component: TestListComponent }
+  { path:'transaction', component: TransactionComponent },
+  { path:'account', component: AccountComponent },
+  { path:'transaction-type', component: TransactionTypeComponent }
 ];
 
 @NgModule({

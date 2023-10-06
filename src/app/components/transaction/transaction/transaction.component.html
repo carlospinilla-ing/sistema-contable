@@ -1,0 +1,140 @@
+
+<div class="card my-2">
+    <div class="card-header">
+        Resumen de carteras
+    </div>
+    <div class="card-body row">
+        <div class="col-md-12">
+            <button type="button" class="btn btn-outline-secondary btn-block" data-toggle="modal" data-target="#exampleModal" (click)="newTransaction()">
+                <fa-icon [icon]="faPlus"></fa-icon> Transferir entre cuentas
+            </button>
+        </div>
+        <div class="col-md-4 my-4" *ngFor="let account of accounts">
+            <div class="card border-primary">
+                <div class="card-header d-flex justify-content-between">
+                    <span class="text-primary">{{account.name}}</span>
+                </div>
+                <div class="card-body text-primary pt-2 pb-2">
+                    <span [ngClass]="[account.active? 'badge badge-success':'badge badge-danger']">{{ account.active ? 'Activa':'Inactiva'}}</span>
+                    <div class="d-flex justify-content-between">
+                        <h5 class="card-title mb-0">Saldo</h5>
+                        <p class="card-text" [ngClass]="[account.transaction!.valueOf()<0?'text-danger':'text-success']">{{account.transaction! | currency }}</p>
+                    </div>
+                    <p class="card-text text-dark">{{account.description}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card my-2">
+    <div class="card-header d-flex justify-content-between">
+        Listado de transacciones
+    </div>
+    <div class="card-body row">
+        <div class="col-md-12">
+            <button type="button" class="btn btn-outline-secondary btn-block" data-toggle="modal" data-target="#exampleModal" (click)="newTransaction()">
+                <fa-icon [icon]="faPlus"></fa-icon> Nueva transaccion
+            </button>
+        </div>
+        <div class="col-md-12 my-4">
+            <table class="table table-bordered table-striped text-center">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Fecha de la transaccion</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Descripcion</th>
+                        <th scope="col">Tipo de transaccion</th>
+                        <th scope="col">Cuenta</th>
+                        <th scope="col">Valor</th>
+                        <th scope="col">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let transaction of transactions; index as i">
+                        <td>{{ i+1 }}</td>
+                        <td>{{ transaction.transactionDate }}</td>
+                        <td>{{ transaction.name }}</td>
+                        <td>{{ transaction.description }}</td>
+                        <td>{{ transaction?.transactionType?.name }}</td>
+                        <td>{{ transaction?.account?.name }}</td>
+                        <td>{{ transaction?.transactionValue! | currency}}</td>
+                        <td>
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" class="icon-button text-primary" data-toggle="modal" data-target="#exampleModal" (click)="openEdit(transaction)">
+                                    <fa-icon [icon]="faPen"></fa-icon>
+                                </button>
+                                <button type="button" class="icon-button  text-danger" (click)="delete(transaction.id)">
+                                    <fa-icon [icon]="faTrash"></fa-icon>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{formStatus?'Crear':'Editar'}} transaccion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div class="submit-form">
+                        <div *ngIf="!submitted">
+                            <div class="form-group">
+                                <label>Fecha de la transacion</label>
+                                <input [(ngModel)]="transaction.transactionDate" type="date" class="form-control" required/>
+                            </div>
+                            <div class="form-group">
+                                <label>Nombre</label>
+                                <input [(ngModel)]="transaction.name" type="text" class="form-control" required/>
+                            </div>
+                            <div class="form-group">
+                                <label>Descripcion</label>
+                                <input [(ngModel)]="transaction.description" type="text" class="form-control" required/>
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Tipo de transaccion</label>
+                                <select class="form-control" [(ngModel)]="transaction.idTransactionType" required>
+                                    <option value="" selected>Seleccione una opcion</option>
+                                    <option *ngFor="let transactionType of transactionTypesOn" [ngValue]="transactionType.id">
+                                        {{transactionType.name}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Cuenta</label>
+                                <select class="form-control" [(ngModel)]="transaction.idAccount" required>
+                                    <option value="" selected>Seleccione una opcion</option>
+                                    <option *ngFor="let account of accountsOn" [ngValue]="account.id">
+                                        {{account.name}}
+                                    </option>
+                                </select>
+                            </div> 
+                            <div class="form-group">
+                                <label>Valor</label>
+                                <input [(ngModel)]="transaction.transactionValue" type="number" class="form-control" required/>
+                            </div>
+                        </div>
+                        <div *ngIf="submitted">
+                            <h4>La transaccion fue {{formStatus?'creada':'editada'}} con exito!</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button *ngIf="!submitted" (click)="save()" class="btn btn-primary">Guardar</button>
+                <button *ngIf="submitted && formStatus" class="btn btn-success" (click)="newTransaction()">Nuevo</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,82 @@
+<div class="card my-5">
+    <div class="card-header d-flex justify-content-between">
+        Lista de tipos de transacciones
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal" (click)="newTransactionType()">
+            Crear
+        </button>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered table-striped text-center">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Activo</th>
+                    <th scope="col">Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let test of transactionTypes; index as i">
+                    <td>{{ i+1 }}</td>
+                    <td>{{ test.name }}</td>
+                    <td>{{ test.transactionTypeEnum | transactionType}}</td>
+                    <td>
+                        <span [ngClass]="[test.active? 'badge badge-success':'badge badge-danger']">{{ test.active ? 'Si':'No'}}</span>
+                    </td>
+                    <td>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" (click)="openEdit(test)">Editar</button>
+                            <button type="button" class="btn btn-danger" (click)="delete(test.id)" >Eliminar</button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{formStatus?'Crear':'Editar'}} tipo de transaccion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div class="submit-form">
+                        <div *ngIf="!submitted">
+                            <div class="form-group">
+                                <label>Nombre</label>
+                                <input [(ngModel)]="transactionType.name" type="text" class="form-control" required/>
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Tipo</label>
+                                <select class="form-control" [(ngModel)]="transactionType.transactionTypeEnum" required>
+                                    <option value="" selected>Seleccione una opcion</option>
+                                    <option *ngFor="let option of optionTypes" [ngValue]="option.id">
+                                        {{option.description}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group form-check" *ngIf="!formStatus">
+                                <input type="checkbox" class="form-check-input" [(ngModel)]="transactionType.active">
+                                <label class="form-check-label">{{transactionType.active?'Activo':'Inactivo'}}</label>
+                            </div>
+                        </div>
+                        <div *ngIf="submitted">
+                            <h4>Tipo de transaccion {{formStatus?'creada':'editada'}} con exito!</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button *ngIf="!submitted" (click)="save()" class="btn btn-primary">Guardar</button>
+                <button *ngIf="submitted && formStatus" class="btn btn-success" (click)="newTransactionType()">Nuevo</button>
+            </div>
+        </div>
+    </div>
+</div>

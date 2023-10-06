@@ -1,0 +1,79 @@
+<div class="card my-5">
+    <div class="card-header">
+        Mis carteras
+    </div>
+    <div class="card-body row">
+        <div class="col-md-12">
+            <button type="button" class="btn btn-outline-secondary btn-block" data-toggle="modal" data-target="#exampleModal" (click)="newAccount()">
+                <fa-icon [icon]="faPlus"></fa-icon> Nueva cartera
+            </button>
+        </div>
+        <div class="col-md-4 my-4" *ngFor="let account of accounts; index as i">
+            <div class="card border-primary">
+                <div class="card-header d-flex justify-content-between">
+                    <span class="text-primary">{{ i+1 }}. {{account.name}}</span>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" class="icon-button text-primary" data-toggle="modal" data-target="#exampleModal" (click)="openEdit(account)">
+                            <fa-icon [icon]="faPen"></fa-icon>
+                        </button>
+                        <button type="button" class="icon-button  text-danger" (click)="delete(account.id)">
+                            <fa-icon [icon]="faTrash"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body text-primary pt-2 pb-2">
+                    <span [ngClass]="[account.active? 'badge badge-success':'badge badge-danger']">{{ account.active ? 'Activa':'Inactiva'}}</span>
+                    <div class="d-flex justify-content-between">
+                        <h5 class="card-title mb-0">Balance</h5>
+                        <p class="card-text" [ngClass]="[account.balance!.valueOf()<0?'text-danger':'text-success']">{{account.balance! | currency }}</p>
+                    </div>
+                    <p class="card-text text-dark">{{account.description}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{formStatus?'Crear':'Editar'}} cartera</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div class="submit-form">
+                        <div *ngIf="!submitted">
+                            <div class="form-group">
+                                <label>Nombre</label>
+                                <input [(ngModel)]="account.name" type="text" class="form-control" required/>
+                            </div>
+                            <div class="form-group">
+                                <label>Descripcion</label>
+                                <input [(ngModel)]="account.description" type="text" class="form-control" required/>
+                            </div> 
+                            <div class="form-group">
+                                <label>Saldo</label>
+                                <input [(ngModel)]="account.balance" type="number" class="form-control" required/>
+                            </div>
+                            <div class="form-group form-check" *ngIf="!formStatus">
+                                <input type="checkbox" class="form-check-input" [(ngModel)]="account.active">
+                                <label class="form-check-label">{{ account.active ?'Activo':'Inactivo'}}</label>
+                            </div>
+                        </div>
+                        <div *ngIf="submitted">
+                            <h4>La cartera fue {{formStatus?'creada':'editada'}} con exito!</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button *ngIf="!submitted" (click)="save()" class="btn btn-primary">Guardar</button>
+                <button *ngIf="submitted && formStatus" class="btn btn-success" (click)="newAccount()">Nuevo</button>
+            </div>
+        </div>
+    </div>
+</div>

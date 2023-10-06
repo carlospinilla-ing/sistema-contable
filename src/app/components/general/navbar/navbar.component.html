@@ -1,0 +1,24 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Inicio</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/transaction"><fa-icon [icon]="faClipboard"></fa-icon> Transacciones</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/account"><fa-icon [icon]="faWallet"></fa-icon> Mis carteras</a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+                <fa-icon [icon]="faGear"></fa-icon> Configuración
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" routerLink="/transaction-type">Tipos de transacciones</a>
+            </div>
+        </li>
+        </ul>
+    </div>
+</nav>
